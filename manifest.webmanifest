@@ -1,6 +1,6 @@
 {
   "name": "Maestro Girolamo Offline",
-  "short_name": "Girolamo",
+  "short_name": "Maestro Girolamo",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

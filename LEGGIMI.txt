@@ -1,11 +1,12 @@
-MAESTRO GIROLAMO — HONOR / PWA OFFLINE
+MAESTRO GIROLAMO — VERSIONE CIFRATA DI PROVA
 
-1. Crea un repository GitHub PUBBLICO separato, chiamato maestro-girolamo-offline.
-2. Carica SOLO questi 5 file: index.html, sw.js, manifest.webmanifest, icon-192.png, icon-512.png. NON caricare JSON di archivio, certificati o backup.
-3. Settings > Pages > Deploy from a branch > main / (root) > Save.
-4. Apri https://dida-skalos.github.io/maestro-girolamo-offline/ nell'Honor con Chrome.
-5. Menu ⋮ > Aggiungi a schermata Home / Installa app. Apri dall'icona una volta con Internet.
-6. Disattiva Internet e verifica che l'app si apra e conservi una lezione FITTIZIA dopo chiusura e riapertura.
-7. Per Centro App usa il collegamento https://dida-skalos.github.io/maestro-girolamo-offline/
+Pubblicare soltanto index.html, sw.js, manifest.webmanifest, icon-192.png e icon-512.png.
+NON pubblicare archivi JSON.
 
-ATTENZIONE: i dati sono conservati nel browser (localStorage), NON cifrati e non sincronizzati. Non importare dati identificativi reali senza autorizzazione e verifica di sicurezza. Non cancellare i dati dell'app/browser; esegui backup manuali. GitHub ospita solo il codice, non l'archivio, ma il codice pubblico e gli aggiornamenti del sito restano una superficie di rischio. Usa un repository separato per isolare l'origine web da Centro App.
+ATTENZIONE: Questa versione crea un NUOVO archivio cifrato; non importa automaticamente i dati locali della precedente PWA. Non cancellare la vecchia versione o i dati del browser.
+
+Usare password >=12 caratteri; se la perdi non puoi recuperare i dati. I backup sono cifrati con la stessa password. Nessun recupero password.
+
+La cifratura avviene nel browser, ma non protegge da malware, browser compromessi o modifiche al codice distribuito dal sito. Verificare le politiche della scuola e fare test con dati fittizi prima di trattare dati personali.
+
+La sincronizzazione automatica non è implementata.
