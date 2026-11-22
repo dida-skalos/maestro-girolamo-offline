@@ -73,13 +73,13 @@ const CLASS_GRADE={'Prima':['I A','I D'],'Seconda':['II A','II D'],'Terza':['III
 const ALIASES={};
 const SCHEDULE=[
  {id:'lun1',day:0,time:'13:50–15:50',grade:'Prima',title:'Laboratorio collettivo · solfeggio, ear training e attività affini',all:true},
- {id:'lun2',day:0,time:'15:50–17:50',grade:'Seconda',all:true},
- {id:'mar1',day:1,time:'13:50–15:50',grade:'Prima',all:true},
- {id:'mar2',day:1,time:'15:50–17:50',grade:'Terza',section:'III A',all:true},
+ {id:'lun2',day:0,time:'15:50–17:50',grade:'Seconda'},
+ {id:'mar1',day:1,time:'13:50–15:50',grade:'Prima'},
+ {id:'mar2',day:1,time:'15:50–17:50',grade:'Terza',section:'III A'},
  {id:'mer1',day:2,time:'13:50–15:50',grade:'Seconda',title:'Musica d’insieme',all:true},
- {id:'mer2',day:2,time:'15:50–17:50',grade:'Terza',section:'III D',all:true},
- {id:'gio1',day:3,time:'13:50–15:50',grade:'Prima',all:true},
- {id:'gio2',day:3,time:'15:50–17:50',grade:'Seconda',all:true},
+ {id:'mer2',day:2,time:'15:50–17:50',grade:'Terza',section:'III D'},
+ {id:'gio1',day:3,time:'13:50–15:50',grade:'Prima'},
+ {id:'gio2',day:3,time:'15:50–17:50',grade:'Seconda'},
  {id:'ven1',day:4,time:'13:50–15:50',grade:'Terza',title:'Musica d’insieme',all:true}
 ];
 function ensureSeed(){
@@ -101,7 +101,29 @@ function ensureSeed(){
  localStorage.setItem(KEY,JSON.stringify(db));
 }
 let currentSlot=null;
-function slotStudents(slot){const names=slot.section?[slot.section]:(CLASS_GRADE[slot.grade]||[]);const ids=names.map(n=>db.classes.find(c=>c.name===n)?.id).filter(Boolean);return db.students.filter(s=>ids.includes(s.classId)&&(slot.all||!Array.isArray(slot.names)||slot.names.includes(s.name)))}
+// Ripristina i gruppi individuali dall'ordine del registro originale, senza pubblicare nominativi.
+// Una volta inizializzati, i gruppi sono memorizzati tramite ID nell'archivio cifrato.
+function ensureCalendarGroups(){
+ if(db.calendarGroups && Object.keys(db.calendarGroups).length)return;
+ const members=name=>{const c=db.classes.find(x=>x.name===name);return c?db.students.filter(s=>s.classId===c.id):[]};
+ const pick=(name,indices)=>indices.map(i=>members(name)[i]?.id).filter(Boolean);
+ const all=name=>members(name).map(s=>s.id);
+ db.calendarGroups={
+  lun2:[...pick('II A',[0,1]),...pick('II D',[0,1])],
+  mar1:[...pick('I A',[0]),...pick('I D',[0])],
+  mar2:all('III A'),
+  mer2:all('III D'),
+  gio1:[...pick('I A',[1,2,3]),...pick('I D',[1])],
+  gio2:[...pick('II A',[2]),...pick('II D',[2,3,4])]
+ };
+ localStorage.setItem(KEY,JSON.stringify(db));
+}
+function slotStudents(slot){
+ const names=slot.section?[slot.section]:(CLASS_GRADE[slot.grade]||[]);
+ const ids=names.map(n=>db.classes.find(c=>c.name===n)?.id).filter(Boolean);
+ const allowed=slot.all?null:new Set(db.calendarGroups?.[slot.id]||[]);
+ return db.students.filter(s=>ids.includes(s.classId)&&(!allowed||allowed.has(s.id)));
+}
 function renderWeekly(){ $('weekly').innerHTML=DAYS.map((day,i)=>`<div class="day-head">${day}</div>`+SCHEDULE.filter(x=>x.day===i).map(x=>{const groups=(x.section?[x.section]:CLASS_GRADE[x.grade]).map(name=>({name,pupils:slotStudents({...x,section:name})}));return `<button class="slot" onclick="openSession('${x.id}')"><b>${x.time} · ${esc(x.section||x.grade)}</b>${x.title?`<small>${esc(x.title)}</small>`:''}${groups.map(g=>`<small><strong>${esc(g.name)}</strong> · ${g.pupils.length} allievi: ${esc(g.pupils.map(s=>s.name).join(' · ')||'—')}</small>`).join('')}</button>`}).join('')).join('');}
 let focusedStudent=null;
 function ratingButtons(studentId,indicator,level){return `<span class="rate-set">${[0,1,2,3].map(n=>`<button type="button" class="rate ${level===n?'chosen':''}" onclick="setRating('${studentId}','${indicator}',${n})">${n}</button>`).join('')}</span>`}
@@ -254,7 +276,7 @@ function syncFromServer(){alert('Questa versione non si collega al server. Usa B
 const syncLabel=message=>{const el=document.getElementById('syncStatus');if(el)el.textContent=message};
 syncLabel('Offline: dati conservati soltanto in questo browser.');
 
-ensureSeed();$('sessionDate').value=$('date').value;render();updateSaveStatus();
+ensureSeed();ensureCalendarGroups();$('sessionDate').value=$('date').value;render();updateSaveStatus();
 loadIndividualDraft();renderCollectiveCharts();updateArchiveStats();
 if ('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')) {
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>console.warn('Offline non disponibile',e)));
