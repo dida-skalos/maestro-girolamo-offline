@@ -268,5 +268,38 @@ saveAndBackup=async function(){try{vaultStorage.setItem(KEY,JSON.stringify(db));
 const originalUpdateSaveStatus=updateSaveStatus;
 updateSaveStatus=function(){originalUpdateSaveStatus();if(vaultPending){document.getElementById('saveStatus').textContent='Cifratura e salvataggio in corso…';}};
 
+// Espone i gestori agli attributi onclick/onchange del markup, anche quando startApp e incapsulata.
+window.addClass = addClass;
+window.addStudent = addStudent;
+window.backup = backup;
+window.changeSchoolYear = changeSchoolYear;
+window.closeClassDetail = closeClassDetail;
+window.closeSession = closeSession;
+window.copyCollectiveReport = copyCollectiveReport;
+window.copyReport = copyReport;
+window.generateCollectiveReport = generateCollectiveReport;
+window.generateReport = generateReport;
+window.loadCollectiveDraft = loadCollectiveDraft;
+window.openClassDashboard = openClassDashboard;
+window.openClassReportFromDashboard = openClassReportFromDashboard;
+window.openIndividual = openIndividual;
+window.openSession = openSession;
+window.openStudentProgressFromClass = openStudentProgressFromClass;
+window.removeItem = removeItem;
+window.render = render;
+window.renderProgress = renderProgress;
+window.renderToday = renderToday;
+window.restore = restore;
+window.reusePrevious = reusePrevious;
+window.saveAndBackup = saveAndBackup;
+window.saveCollectiveDraft = saveCollectiveDraft;
+window.saveIndividualNote = saveIndividualNote;
+window.saveLesson = saveLesson;
+window.saveSession = saveSession;
+window.setPresence = setPresence;
+window.setRating = setRating;
+window.setTrend = setTrend;
+window.updateCollectiveTargets = updateCollectiveTargets;
+
 }
 </script></body></html>

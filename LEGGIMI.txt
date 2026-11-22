@@ -10,3 +10,5 @@ Usare password >=12 caratteri; se la perdi non puoi recuperare i dati. I backup 
 La cifratura avviene nel browser, ma non protegge da malware, browser compromessi o modifiche al codice distribuito dal sito. Verificare le politiche della scuola e fare test con dati fittizi prima di trattare dati personali.
 
 La sincronizzazione automatica non è implementata.
+
+CORREZIONE: ripristinati i collegamenti dei pulsanti e controlli inline. Aggiorna i file del repository senza disinstallare la PWA.
